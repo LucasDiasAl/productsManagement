@@ -20,6 +20,10 @@ public class CategoryController {
 
     private CategoryService service;
 
+    public CategoryController(CategoryService service) {
+        this.service = service;
+    }
+
     @PostMapping
     public ResponseEntity<Category> create(@RequestBody CategoryDTO categoryData) {
         Category createdCategory = this.service.create(categoryData);

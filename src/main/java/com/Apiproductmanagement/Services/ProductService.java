@@ -32,7 +32,7 @@ public class ProductService {
         return this.repository.findAll();
     }
 
-    public Product updateProducts(String id, ProductDTO productData) {
+    public Product updateProduct(String id, ProductDTO productData) {
         Product product = this.repository.findById(id).orElseThrow(ProductNotFound::new);
         if (!productData.title().isEmpty())
             product.setTitle(productData.title());
@@ -45,7 +45,7 @@ public class ProductService {
         return product;
     }
 
-    public void deleteProducts(String id) {
+    public void deleteProduct(String id) {
         Product product = this.repository.findById(id).orElseThrow(ProductNotFound::new);
         this.repository.delete(product);
     }
