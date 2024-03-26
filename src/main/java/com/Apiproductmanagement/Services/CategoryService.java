@@ -1,6 +1,7 @@
 package com.Apiproductmanagement.Services;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.Apiproductmanagement.domain.category.Category;
 import com.Apiproductmanagement.domain.category.CategoryDTO;
@@ -38,5 +39,9 @@ public class CategoryService {
     public void deleteCategory(String id) {
         Category category = this.repository.findById(id).orElseThrow(CategoryNotFound::new);
         this.repository.delete(category);
+    }
+
+    public Optional<Category> getById(String id) {
+        return this.repository.findById(id);
     }
 }
