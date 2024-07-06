@@ -2,6 +2,8 @@ package com.Apiproductmanagement.Services;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import com.Apiproductmanagement.Services.aws.AwsSnsService;
+import com.Apiproductmanagement.Services.aws.MessageDTO;
 import com.Apiproductmanagement.domain.category.Category;
 import com.Apiproductmanagement.domain.category.exceptions.CategoryNotFound;
 import com.Apiproductmanagement.domain.product.Product;
@@ -13,10 +15,13 @@ import com.Apiproductmanagement.repositories.ProductRepository;
 public class ProductService {
     private CategoryService categoryService;
     private ProductRepository repository;
+    private AwsSnsService snsService;
 
-    public ProductService(CategoryService categoryService, ProductRepository repository) {
+    public ProductService(CategoryService categoryService, ProductRepository repository,
+            AwsSnsService snsService) {
         this.repository = repository;
         this.categoryService = categoryService;
+        this.snsService = snsService;
     }
 
     public Product create(ProductDTO productData) {
@@ -25,6 +30,8 @@ public class ProductService {
         Product newProduct = new Product(productData);
         newProduct.setCategory(category);
         this.repository.save(newProduct);
+
+        this.snsService.publish(new MessageDTO(newProduct.getOwnerId()));
         return newProduct;
     }
 
@@ -40,8 +47,13 @@ public class ProductService {
             product.setDescription(productData.description());
         if (productData.price() != null)
             product.setPrice(productData.price());
-        categoryService.getById(productData.categoryId()).ifPresent(product::setCategory);
+        if (productData.categoryId() != null)
+            categoryService.getById(productData.categoryId()).ifPresent(product::setCategory);
+
         this.repository.save(product);
+
+        this.snsService.publish(new MessageDTO(product.getOwnerId()));
+
         return product;
     }
 

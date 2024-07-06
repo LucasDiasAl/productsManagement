@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Apiproductmanagement.Services.ProductService;
 import com.Apiproductmanagement.domain.product.Product;
 import com.Apiproductmanagement.domain.product.ProductDTO;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/product")
@@ -36,14 +36,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathParam("id") String id,
+    public ResponseEntity<Product> update(@PathVariable("id") String id,
             @RequestBody ProductDTO productData) {
         Product updatedProduct = this.service.updateProduct(id, productData);
         return ResponseEntity.status(204).body(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> update(@PathParam("id") String id) {
+    public ResponseEntity<Product> update(@PathVariable("id") String id) {
         this.service.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
